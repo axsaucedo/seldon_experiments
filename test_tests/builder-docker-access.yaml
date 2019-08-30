@@ -1,0 +1,48 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: k8s-builder
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: k8s-101
+    spec:
+      serviceAccountName: k8s-101-role
+      containers:
+      - name: k8s-docker-builder
+        image: seldonio/core-builder:0.4
+        command: 
+        - tail 
+        args:
+        - -f 
+        - /dev/null
+        volumeMounts:
+        - mountPath: /var/run/docker.sock
+          name: docker-socket-volume
+        securityContext:
+          privileged: true
+      volumes:
+      - name: docker-socket-volume
+        hostPath:
+          path: /var/run/docker.sock
+          type: File
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: k8s-101-role
+subjects:
+- kind: ServiceAccount
+  name: k8s-101-role
+  namespace: default
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: k8s-101-role

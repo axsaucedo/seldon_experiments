@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kaniko
+spec:
+  initContainers:
+  - name: init-clone-repo
+    image: alpine/git
+    args:
+        - clone
+        - --single-branch
+        - --
+        - https://github.com/SeldonIO/seldon-core.git
+        - /context
+    volumeMounts:
+    - name: context
+      mountPath: /context
+  containers:
+  - name: kaniko
+    image: gcr.io/kaniko-project/executor:debug
+    command:
+    - /kaniko/executor 
+    args:
+    - --dockerfile 
+    - core-builder/Dockerfile 
+    - --context 
+    - /context
+    - --no-push
+    - --insecure-pull
+    volumeMounts:
+      - name: context
+        mountPath: /context
+      - name: config
+        mountPath: /kaniko/.docker
+  restartPolicy: Never
+  volumes:
+    - name: config
+      secret:
+        secretName: config
+    - name: context
+      emptyDir: {}

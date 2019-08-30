@@ -1,0 +1,13 @@
+{
+    "auths": {
+        "klawcluster.azurecr.io": {
+            "auth": "S2xhd0NsdXN0ZXI6aEl1dHBlSytRVDJSOStVaXhwL2pybnVLdjJHNGV3R3g="
+        },
+        "index.docker.io": {
+            "auth": "YXhzYXV6ZTp3aG9tLXN1YnVyYmlhLWNhcHNpemU="
+        }
+    },
+    "HttpHeaders": {
+        "User-Agent": "Docker-Client/18.09.5 (linux)"
+    }
+}
