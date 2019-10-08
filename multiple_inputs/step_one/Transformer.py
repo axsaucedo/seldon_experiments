@@ -5,6 +5,10 @@ class Transformer():
     def __init__(self):
         self._tags = {}
 
+    def predict_raw(self, request):
+        logging.warning(request)
+        return request
+
     def predict(self, X, feature_names, meta):
         logging.warning(X)
         logging.warning(feature_names)
