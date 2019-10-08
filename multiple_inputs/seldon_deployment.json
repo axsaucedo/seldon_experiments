@@ -1,0 +1,107 @@
+{
+    "apiVersion": "machinelearning.seldon.io/v1alpha2",
+    "kind": "SeldonDeployment",
+    "metadata": {
+        "labels": {
+            "app": "seldon"
+        },
+        "name": "text-example"
+    },
+    "spec": {
+        "annotations": {
+            "project_name": "Iris classification",
+            "deployment_version": "0.1"
+        },
+        "name": "text-dep",
+        "predictors": [
+            {
+                "componentSpecs": [{
+                    "spec": {
+                        "containers": [
+                            {
+                                "image": "step_one:0.1",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "step-one",
+                                "resources": {
+                                    "requests": {
+                                        "memory": "1Mi"
+                                    }
+                                },
+                                "env": [
+                                    {
+                                        "name": "SELDON_LOG_LEVEL",
+                                        "value": "DEBUG"
+                                    }
+                                ]
+
+                            },
+                            {
+                                "image": "step_two:0.1",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "step-two",
+                                "resources": {
+                                    "requests": {
+                                        "memory": "1Mi"
+                                    }
+                                },
+                                "env": [
+                                    {
+                                        "name": "SELDON_LOG_LEVEL",
+                                        "value": "DEBUG"
+                                    }
+                                ]
+
+                            },
+                            {
+                                "image": "step_three:0.1",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "step-three",
+                                "resources": {
+                                    "requests": {
+                                        "memory": "1Mi"
+                                    }
+                                },
+                                "env": [
+                                    {
+                                        "name": "SELDON_LOG_LEVEL",
+                                        "value": "DEBUG"
+                                    }
+                                ]
+
+                            }
+
+                        ],
+                        "terminationGracePeriodSeconds": 20
+                    }
+                }],
+                "graph": {
+                    "children": [{
+                        "children": [{
+                            "name": "step-three",
+                            "endpoint": {
+                                "type": "REST"
+                            },
+                            "type": "MODEL"
+                        }],
+                        "name": "step-two",
+                        "endpoint": {
+                            "type": "REST"
+                        },
+                        "type": "MODEL"
+                    }],
+                    "name": "step-one",
+                    "endpoint": {
+                        "type" : "REST"
+                    },
+                    "type": "MODEL"
+                },
+                "name": "text-pred",
+                "replicas": 1,
+                "annotations": {
+                    "predictor_version" : "0.1"
+                }
+            }
+        ]
+    }
+}
+
